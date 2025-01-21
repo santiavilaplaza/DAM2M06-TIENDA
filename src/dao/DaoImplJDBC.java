@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 import model.Employee;
 
@@ -62,4 +63,14 @@ public class DaoImplJDBC implements Dao {
     	return employee;
 	}
 
+	@Override
+	public ArrayList getInventory() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public boolean writeInventory(ArrayList inventory) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

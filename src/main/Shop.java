@@ -6,16 +6,17 @@ import model.Amount;
 import model.Client;
 import model.Employee;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
+
+import dao.Dao;
+import dao.DaoImplFile;
+import dao.DaoImplJDBC;
 
 public class Shop {
 	private Amount cash = new Amount(100.00);
@@ -25,6 +26,8 @@ public class Shop {
 //	private Sale[] sales;
 	private ArrayList<Sale> sales;
 	private int numberSales;
+
+	Dao dao = new DaoImplFile();
 
 	final static double TAX_RATE = 1.04;
 
@@ -113,6 +116,7 @@ public class Shop {
 			System.out.println("===========================");
 			System.out.println("Menu principal miTienda.com");
 			System.out.println("===========================");
+			System.out.println("0) Exportar Inventario");
 			System.out.println("1) Contar caja");
 			System.out.println("2) Añadir producto");
 			System.out.println("3) Añadir stock");
@@ -126,8 +130,11 @@ public class Shop {
 			System.out.print("Seleccione una opción: ");
 			opcion = scanner.nextInt();
 
+			System.out.println(shop.getInventory());
+
 			switch (opcion) {
-			case 1:
+			
+				case 1:
 				shop.showCash();
 				break;
 
@@ -214,68 +221,14 @@ public class Shop {
 	 */
 	private void readInventory() {
 		// locate file, path and name
-		File f = new File(System.getProperty("user.dir") + File.separator + "files/inputInventory.txt");
-		
-		try {			
-			// wrap in proper classes
-			FileReader fr;
-			fr = new FileReader(f);				
-			BufferedReader br = new BufferedReader(fr);
-			
-			// read first line
-			String line = br.readLine();
-			
-			// process and read next line until end of file
-			while (line != null) {
-				// split in sections
-				String[] sections = line.split(";");
-				
-				String name = "";
-				double wholesalerPrice=0.0;
-				int stock = 0;
-				
-				// read each sections
-				for (int i = 0; i < sections.length; i++) {
-					// split data in key(0) and value(1) 
-					String[] data = sections[i].split(":");
-					
-					switch (i) {
-					case 0:
-						// format product name
-						name = data[1];
-						break;
-						
-					case 1:
-						// format price
-						wholesalerPrice = Double.parseDouble(data[1]);
-						break;
-						
-					case 2:
-						// format stock
-						stock = Integer.parseInt(data[1]);
-						break;
-						
-					default:
-						break;
-					}
-				}
-				// add product to inventory
-				addProduct(new Product(name, new Amount(wholesalerPrice), true, stock));
-				
-				// read next line
-				line = br.readLine();
-			}
-			fr.close();
-			br.close();
-			
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		this.inventory = dao.getInventory();
+		System.out.println(inventory);
+	}
+
+	public boolean writeInventory() throws IOException {
+		boolean operacionCompleta;
+		operacionCompleta = dao.writeInventory(inventory);
+		return operacionCompleta;
 	}
 
 	/**
