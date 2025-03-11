@@ -17,6 +17,7 @@ import java.util.Scanner;
 import dao.Dao;
 import dao.DaoImplFile;
 import dao.DaoImplJDBC;
+import dao.DaoImplMongoDB;
 
 public class Shop {
 	private Amount cash = new Amount(100.00);
@@ -27,7 +28,7 @@ public class Shop {
 	private ArrayList<Sale> sales;
 	private int numberSales;
 
-	Dao dao = new DaoImplFile();
+	Dao dao = new DaoImplMongoDB();
 
 	final static double TAX_RATE = 1.04;
 
@@ -103,6 +104,7 @@ public class Shop {
 
 		// load inventory from external data
 		shop.loadInventory();
+		System.out.println(shop.getInventory());
 		
 		// init session as employee
 		shop.initSession();

@@ -93,8 +93,10 @@ public class LoginView extends JFrame implements ActionListener{
 			} else {
 				Employee employee = new Employee();
 				try {
-					boolean logged = employee.login(Integer.parseInt(employeeId), password);
+					// boolean logged = employee.login(Integer.parseInt(employeeId), password);
 					
+					// TODO cambiar linea
+					boolean logged = true;
 					if (Constants.MAX_LOGIN_TIMES <= counterErrorLogin) {
 						throw new LimitLoginException("Error login superado", counterErrorLogin);
 					}

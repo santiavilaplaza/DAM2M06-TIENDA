@@ -5,7 +5,6 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 
 import model.Employee;
@@ -48,19 +47,19 @@ public class DaoImplJDBC implements Dao {
 		String query = "select * from employee where employeeId= ? and password = ? ";
 		
 		try (PreparedStatement ps = connection.prepareStatement(query)) { 
-    		ps.setInt(1,employeeId);
-    	  	ps.setString(2,password);
+			ps.setInt(1,employeeId);
+			ps.setString(2,password);
     	  	//System.out.println(ps.toString());
             try (ResultSet rs = ps.executeQuery()) {
-            	if (rs.next()) {
-            		employee = new Employee(rs.getInt(1), rs.getString(2), rs.getString(3));
-            	}
+				if (rs.next()) {
+					employee = new Employee(rs.getInt(1), rs.getString(2), rs.getString(3));
+				}
             }
         } catch (SQLException e) {
 			// in case error in SQL
 			e.printStackTrace();
 		}
-    	return employee;
+		return employee;
 	}
 
 	@Override

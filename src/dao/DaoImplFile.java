@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import model.Amount;
 import model.Employee;
 import model.Product;
-import model.Sale;
 
 public class DaoImplFile implements Dao {
 
