@@ -135,4 +135,14 @@ public class DaoImplFile implements Dao {
 			return false;
 		}
 	}
+
+	public void addProduct(Product product){
+		// TODO Auto-generated method stub
+	}
+	public void updateProduct(String name, int stock){
+		// TODO Auto-generated method stub
+	}
+	public void deleteProduct(String name){
+		// TODO Auto-generated method stub
+	}
 }

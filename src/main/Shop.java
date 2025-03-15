@@ -104,7 +104,6 @@ public class Shop {
 
 		// load inventory from external data
 		shop.loadInventory();
-		System.out.println(shop.getInventory());
 		
 		// init session as employee
 		shop.initSession();
@@ -223,8 +222,10 @@ public class Shop {
 	 */
 	private void readInventory() {
 		// locate file, path and name
+		dao.connect();
 		this.inventory = dao.getInventory();
 		System.out.println(inventory);
+		dao.disconnect();
 	}
 
 	public boolean writeInventory() throws IOException {
@@ -493,12 +494,22 @@ public class Shop {
 	 * @param product
 	 */
 	public void addProduct(Product product) {
-		if (isInventoryFull()) {
-			System.out.println("No se pueden añadir más productos, se ha alcanzado el máximo de " + inventory.size());
-			return;
-		}
+		// if (isInventoryFull()) {
+		// 	System.out.println("No se pueden añadir más productos, se ha alcanzado el máximo de " + inventory.size());
+		// 	return;
+		// }
 		inventory.add(product);
 		numberProducts++;
+
+		dao.connect();
+		dao.addProduct(product);
+		dao.disconnect();
+	}
+
+	public void addStock(String name, int stock) {
+		dao.connect();
+		dao.updateProduct(name, stock);
+		dao.disconnect();
 	}
 	
 	

@@ -164,7 +164,7 @@ public class ProductView extends JDialog implements ActionListener{
 							true,
 							Integer.parseInt(textFieldStock.getText()));
 					shop.addProduct(product);
-					JOptionPane.showMessageDialog(null, "Producto añadido ", "Information",
+					JOptionPane.showMessageDialog(null, "Producto añadido ", "Informat ion",
 							JOptionPane.INFORMATION_MESSAGE);
 					// release current screen
 					dispose();	

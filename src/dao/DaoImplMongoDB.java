@@ -10,7 +10,14 @@ import com.mongodb.MongoClientURI;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.result.DeleteResult;
+import com.mongodb.client.result.UpdateResult;
+
 import static com.mongodb.client.model.Filters.eq;
+
+import static com.mongodb.client.model.Updates.combine;
+import static com.mongodb.client.model.Updates.set;
+
 
 import model.Amount;
 import model.Employee;
@@ -51,15 +58,12 @@ public class DaoImplMongoDB implements Dao {
 
         ArrayList<Product> inventory = new ArrayList<>();
         
-        connect();
-        
         collection = mongoDatabase.getCollection("inventory");
         
         Iterable<Document> documents = collection.find();
         
         for (Document document : documents) {
              // Extraer unicamente el precio del wholesalerPrice
-            System.out.println("aqui");
 
             Document priceDoc = (Document) document.get("wholesalerPrice");
             double priceValue = priceDoc != null ? priceDoc.getDouble("value") : 0.0;
@@ -88,5 +92,33 @@ public class DaoImplMongoDB implements Dao {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'writeInventory'");
     }
-    
+
+    public void addProduct(Product product){
+        
+        collection = mongoDatabase.getCollection("inventory");
+
+        Boolean stock = true;
+
+        if (product.getStock() <= 0) {
+            stock = false;
+        }
+
+        Document document = new Document ("_id", new ObjectId())
+        .append("name", product.getName())
+        .append("wholesalerPrice", new Document("value", product.getWholesalerPrice()).append("currency", "€"))
+        .append("available", stock).append("stock", product.getStock())
+        .append("id", product.getId());
+
+        collection.insertOne(document);
+	}
+	public void updateProduct(String name, int stock){        
+        collection = mongoDatabase.getCollection("inventory");
+
+		UpdateResult result = collection.updateOne(eq("name", name),set("stock", stock));
+
+	}
+	public void deleteProduct(String name){
+		DeleteResult result = collection.deleteMany(eq("name", name));
+	}
+
 }

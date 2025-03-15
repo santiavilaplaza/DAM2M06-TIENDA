@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import model.Employee;
+import model.Product;
 
 public class DaoImplJDBC implements Dao {
 	Connection connection;
@@ -71,5 +72,15 @@ public class DaoImplJDBC implements Dao {
 	public boolean writeInventory(ArrayList inventory) {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	public void addProduct(Product product){
+		// TODO Auto-generated method stub
+	}
+	public void updateProduct(String name, int stock){
+		// TODO Auto-generated method stub
+	}
+	public void deleteProduct(String name){
+		// TODO Auto-generated method stub
 	}
 }
