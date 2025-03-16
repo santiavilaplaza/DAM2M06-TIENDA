@@ -1,5 +1,7 @@
 package dao;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 import org.bson.Document;
@@ -10,6 +12,7 @@ import com.mongodb.MongoClientURI;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Filters;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 
@@ -49,8 +52,46 @@ public class DaoImplMongoDB implements Dao {
 
     @Override
     public Employee getEmployee(int employeeId, String password) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getEmployee'");
+    System.out.println("holacaracola");
+    
+    Employee employee = null;
+    
+    collection = mongoDatabase.getCollection("users");
+
+    if (collection == null) {
+        System.out.println("No se pudo conectar a la base de datos.");
+    } else {
+        System.out.println("Conexión exitosa.");
+    }
+
+    Document employeeDoc = collection.find(Filters.eq("employeeId", employeeId)).first();
+
+    if (employeeDoc != null) {
+        String storedPassword = employeeDoc.getString("password");
+
+        // if (storedPassword != null && storedPassword.equals(password)) {
+        //     employee = new Employee(
+        //         employeeDoc.getInteger("employeeId"),
+        //         employeeDoc.getString("name"),
+        //         employeeDoc.getString("password")
+        //     );
+        // }
+
+        if (storedPassword != null) {
+            if (storedPassword.equals(password)) {
+                employee = new Employee(
+                    employeeDoc.getInteger("employeeId"),
+                    employeeDoc.getString("name"),
+                    storedPassword
+                );
+            } else {
+                System.out.println("Contraseña incorrecta");
+            }
+        } else {
+            System.out.println("Empleado no encontrado o contraseña no disponible.");
+        }
+}
+    return employee;
     }
 
     @Override
@@ -89,8 +130,36 @@ public class DaoImplMongoDB implements Dao {
 
     @Override
     public boolean writeInventory(ArrayList<Product> products) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'writeInventory'");
+        
+        LocalDateTime fechaHora = LocalDateTime.now();
+		DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/mm/yyyy hh:mm:ss");
+        String fechaFormateada = fechaHora.format(formato);
+    
+        collection = mongoDatabase.getCollection("historical_inventory");
+
+        try {
+            for (Product product: products) {
+
+                System.out.println(product);
+                Document document = new Document ("_id", new ObjectId())
+                .append("name", product.getName())
+                .append("wholesalerPrice", 
+                    new Document("value", product.getWholesalerPrice().getValue())
+                    .append("currency", "€"))
+                .append("available", product.isAvailable()).append("stock", product.getStock())
+                .append("id", product.getId())
+                .append("created_at", fechaFormateada);
+
+                collection.insertOne(document);
+
+            }
+
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        
     }
 
     public void addProduct(Product product){
@@ -105,7 +174,7 @@ public class DaoImplMongoDB implements Dao {
 
         Document document = new Document ("_id", new ObjectId())
         .append("name", product.getName())
-        .append("wholesalerPrice", new Document("value", product.getWholesalerPrice()).append("currency", "€"))
+        .append("wholesalerPrice", new Document("value", product.getWholesalerPrice().getValue()).append("currency", "€"))
         .append("available", stock).append("stock", product.getStock())
         .append("id", product.getId());
 
@@ -114,11 +183,33 @@ public class DaoImplMongoDB implements Dao {
 	public void updateProduct(String name, int stock){        
         collection = mongoDatabase.getCollection("inventory");
 
-		UpdateResult result = collection.updateOne(eq("name", name),set("stock", stock));
+        boolean isAvailable = true;
+
+        if (stock <= 0) {
+            isAvailable = false;
+        }
+
+        System.out.println("Entrando en updateProduct...");
+        try {
+            UpdateResult result = collection.updateOne(eq("name", name),combine(set("stock", stock), set("available", isAvailable)));
+            System.out.println("se ha modificado el producto");        
+        } catch (Exception e) {
+            // TODO: handle exception
+            System.out.println("Error al modificar el producto");        
+        }
 
 	}
 	public void deleteProduct(String name){
-		DeleteResult result = collection.deleteMany(eq("name", name));
+
+        collection = mongoDatabase.getCollection("inventory");
+
+        try {
+            DeleteResult result = collection.deleteOne(eq("name", name)); 
+            System.out.println("se ha eliminado el producto correctamente");        
+        } catch (Exception e) {
+            // TODO: handle exception
+            System.out.println("Da error al eliminar el producto");        
+        }
 	}
 
 }

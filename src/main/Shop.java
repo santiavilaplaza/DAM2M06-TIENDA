@@ -14,6 +14,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import com.mongodb.client.result.DeleteResult;
+
 import dao.Dao;
 import dao.DaoImplFile;
 import dao.DaoImplJDBC;
@@ -229,8 +231,10 @@ public class Shop {
 	}
 
 	public boolean writeInventory() throws IOException {
+		dao.connect();
 		boolean operacionCompleta;
 		operacionCompleta = dao.writeInventory(inventory);
+		dao.disconnect();
 		return operacionCompleta;
 	}
 
@@ -284,6 +288,12 @@ public class Shop {
 		} else {
 			System.out.println("No se ha encontrado el producto con nombre " + name);
 		}
+	}
+
+	public void removeProduct(String name){
+        dao.connect();
+		dao.deleteProduct(name);
+		dao.disconnect();
 	}
 
 	/**
@@ -427,51 +437,55 @@ public class Shop {
 	 */
 	private void writeSales() {
 		// define file name based on date
-		LocalDate myObj = LocalDate.now();
-		String fileName = "sales_" + myObj.toString() + ".txt";
+		// LocalDate myObj = LocalDate.now();
+		// String fileName = "sales_" + myObj.toString() + ".txt";
 		
-		// locate file, path and name
-		File f = new File(System.getProperty("user.dir") + File.separator + "files" + File.separator + fileName);
+		// // locate file, path and name
+		// File f = new File(System.getProperty("user.dir") + File.separator + "files" + File.separator + fileName);
 				
-		try {
-			// wrap in proper classes
-			FileWriter fw;
-			fw = new FileWriter(f, true);
-			PrintWriter pw = new PrintWriter(fw);
+		// try {
+		// 	// wrap in proper classes
+		// 	FileWriter fw;
+		// 	fw = new FileWriter(f, true);
+		// 	PrintWriter pw = new PrintWriter(fw);
 			
-			// write line by line
-			int counterSale=1;
-			for (Sale sale : sales) {				
-				// format first line TO BE -> 1;Client=PERE;Date=29-02-2024 12:49:50;
-				StringBuilder firstLine = new StringBuilder(counterSale+";Client="+sale.getClient()+";Date=" + sale.formatDate()+";");
-				pw.write(firstLine.toString());
-				fw.write("\n");
+		// 	// write line by line
+		// 	int counterSale=1;
+		// 	for (Sale sale : sales) {				
+		// 		// format first line TO BE -> 1;Client=PERE;Date=29-02-2024 12:49:50;
+		// 		StringBuilder firstLine = new StringBuilder(counterSale+";Client="+sale.getClient()+";Date=" + sale.formatDate()+";");
+		// 		pw.write(firstLine.toString());
+		// 		fw.write("\n");
 				
-				// format second line TO BE -> 1;Products=Manzana,20.0€;Fresa,10.0€;Hamburguesa,60.0€;
-				// build products line
-				StringBuilder productLine= new StringBuilder();
-				for (Product product : sale.getProducts()) {
-					productLine.append(product.getName()+ "," + product.getPublicPrice()+";");
-				}
-				StringBuilder secondLine = new StringBuilder(counterSale+ ";" + "Products=" + productLine +";");						                                                
-				pw.write(secondLine.toString());	
-				fw.write("\n");
+		// 		// format second line TO BE -> 1;Products=Manzana,20.0€;Fresa,10.0€;Hamburguesa,60.0€;
+		// 		// build products line
+		// 		StringBuilder productLine= new StringBuilder();
+		// 		for (Product product : sale.getProducts()) {
+		// 			productLine.append(product.getName()+ "," + product.getPublicPrice()+";");
+		// 		}
+		// 		StringBuilder secondLine = new StringBuilder(counterSale+ ";" + "Products=" + productLine +";");						                                                
+		// 		pw.write(secondLine.toString());	
+		// 		fw.write("\n");
 				
-				// format third line TO BE -> 1;Amount=93.60€;
-				StringBuilder thirdLine = new StringBuilder(counterSale+ ";" + "Amount=" + sale.getAmount() +";");						                                                
-				pw.write(thirdLine.toString());	
-				fw.write("\n");
+		// 		// format third line TO BE -> 1;Amount=93.60€;
+		// 		StringBuilder thirdLine = new StringBuilder(counterSale+ ";" + "Amount=" + sale.getAmount() +";");						                                                
+		// 		pw.write(thirdLine.toString());	
+		// 		fw.write("\n");
 				
-				// increment counter sales
-				counterSale++;
-			}
-			// close files
-			pw.close();
-			fw.close();
+		// 		// increment counter sales
+		// 		counterSale++;
+		// 	}
+		// 	// close files
+		// 	pw.close();
+		// 	fw.close();
 			
-		} catch (IOException e) {
-			e.printStackTrace();
-		}		
+		// } catch (IOException e) {
+		// 	e.printStackTrace();
+		// }		
+
+		dao.connect();
+		dao.writeInventory(inventory);
+		dao.disconnect();
 	}
 
 	/**

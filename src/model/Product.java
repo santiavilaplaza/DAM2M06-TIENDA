@@ -13,7 +13,7 @@ public class Product {
     
 	public Product(String name, Amount wholesalerPrice, boolean available, int stock) {
 		super();
-		this.id = totalProducts+1;
+		this.id = 1+totalProducts;
 		this.name = name;
 		this.wholesalerPrice = wholesalerPrice;
 		this.publicPrice = new Amount(wholesalerPrice.getValue() * 2);
@@ -87,16 +87,6 @@ public class Product {
 	@Override
 	public String toString() {
 		return "Product [name=" + name + ", publicPrice=" + publicPrice + ", wholesalerPrice=" + wholesalerPrice
-				+ ", available=" + available + ", stock=" + stock + "]";
+				+ ", available=" + available + ", stock=" + stock + "totalProducts" + totalProducts +"]";
 	}
-
-	
-	
-	
-	
-	
-
-    
-
-    
 }
