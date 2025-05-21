@@ -83,17 +83,20 @@ public class LoginView extends JFrame implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == btnLogin) {
 			// in case clicks button
-			String employeeId = textFieldEmployeeId.getText();
+			String employeeIdString = textFieldEmployeeId.getText();
+			int employeeId = Integer.parseInt(employeeIdString);
 			String password = textFieldPassword.getText();
 
-			if (employeeId.isEmpty() || password.isEmpty()) {
+			if (employeeIdString.isEmpty() || password.isEmpty()) {
 				JOptionPane.showMessageDialog(null, "Usuario y contraseña son obligatorios", "Error",
 						JOptionPane.ERROR_MESSAGE);
 
 			} else {
 				Employee employee = new Employee();
 				try {
-					boolean logged = employee.login(Integer.parseInt(employeeId), password);
+					boolean logged = employee.login(employeeId, password);
+
+					System.out.println("logged? " + logged);
 					
 					if (Constants.MAX_LOGIN_TIMES <= counterErrorLogin) {
 						throw new LimitLoginException("Error login superado", counterErrorLogin);

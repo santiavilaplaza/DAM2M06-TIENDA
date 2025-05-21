@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import model.Amount;
 import model.Employee;
 import model.Product;
-import model.Sale;
 
 public class DaoImplFile implements Dao {
 
@@ -135,5 +134,15 @@ public class DaoImplFile implements Dao {
 			e.printStackTrace();
 			return false;
 		}
+	}
+
+	public void addProduct(Product product){
+		// TODO Auto-generated method stub
+	}
+	public void updateProduct(String name, int stock){
+		// TODO Auto-generated method stub
+	}
+	public void deleteProduct(String name){
+		// TODO Auto-generated method stub
 	}
 }
