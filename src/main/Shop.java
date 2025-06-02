@@ -30,7 +30,7 @@ public class Shop {
 	private ArrayList<Sale> sales;
 	private int numberSales;
 
-	Dao dao = new DaoImplMongoDB();
+	Dao dao = new DaoImplFile();
 
 	final static double TAX_RATE = 1.04;
 

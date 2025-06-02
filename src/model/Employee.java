@@ -1,13 +1,14 @@
 package model;
 
+import dao.Dao;
+import dao.DaoImplJDBC;
 import main.Logable;
-import dao.*;
 
 public class Employee extends Person implements Logable{
 	private int employeeId;
 	private String password;
 	// connection using JDBC SQL
-	private Dao dao = new DaoImplMongoDB();
+	private Dao dao = new DaoImplJDBC();
 	
 //	public static final int USER = 123;
 //	public static final String PASSWORD = "test";
