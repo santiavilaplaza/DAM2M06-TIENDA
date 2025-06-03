@@ -18,7 +18,7 @@ public class DaoImplJDBC implements Dao {
 		// Define connection parameters
 		String url = "jdbc:mysql://localhost:3306/shop";
 		String user = "root";
-		String pass = "";
+		String pass = "root";
 		try {
 			this.connection = DriverManager.getConnection(url, user, pass);
 		} catch (SQLException e) {
