@@ -2,8 +2,8 @@ package dao.xml;
 
 import java.util.ArrayList;
 
-import org.xml.sax.SAXException;
 import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import model.Amount;
@@ -32,43 +32,53 @@ public class SaxReader extends DefaultHandler {
 
     @Override
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
-        switch (qName) {
-            case "product":
-                if (qName.equals("product")) {
-                    this.product = new Product(
-                        attributes.getValue("name") != null ? attributes.getValue("name") : "empty",
-                        new Amount(0), // Crear un objeto Amount con el valor predeterminado
-                        true, // Disponibilidad
-                        0 // Stock inicial
-                    );                
-                }
-                break;
-            }
-        this.parsedElement = qName;
+        // Cada vez que empieza un elemento, reiniciamos el buffer
+        value = "";
+        parsedElement = qName;
+        
+        if ("product".equals(qName)) {
+            // creas tu Product con atributos, etc.
+            product = new Product(
+                attributes.getValue("name"),
+                new Amount(0),
+                true,
+                0
+            );
+        }
     }
 
     @Override
     public void characters(char[] ch, int start, int length) throws SAXException {
-        value = new String(ch, start, length);
-        switch(parsedElement) {
-            case "product" :
-                break;
-            case "price":
-                this.product.setWholesalerPrice(new Amount(Double.valueOf(value)));
-                break;
-            case "stock":
-            this.product.setStock(Integer.valueOf(value));
-            break;
-        }
+        // Acumulamos todo el texto (sin procesarlo aún)
+        value += new String(ch, start, length);
     }
 
     @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
-        // Añadimos el producto dentro del ArrayList
-        if(qName.equals("products")){
-            this.inventory.add(this.product);
+        String text = value.trim();       // eliminamos espacios y saltos
+        if (!text.isEmpty()) {
+            switch (qName) {
+                case "wholesalePrice":    // coincidir con tu XML real
+                    double precio = Double.parseDouble(text);
+                    // si alguna vez amplías Amount para guardar currency, lo recogerás aquí
+                    product.setWholesalerPrice(new Amount(precio));
+                    break;
+                case "stock":
+                    int stock = Integer.parseInt(text);
+                    product.setStock(stock);
+                    break;
+                // otros campos si tuvieras más...
+            }
         }
-        this.parsedElement = "";
+
+        if ("product".equals(qName)) {
+            // cuando se cierra <product> añadimos al inventario
+            inventory.add(product);
+        }
+
+        // limpiamos para el siguiente elemento
+        parsedElement = "";
+        value = "";
     }
 
     @Override
@@ -81,4 +91,5 @@ public class SaxReader extends DefaultHandler {
             System.out.println(p.toString());
         }
     }
+
 }

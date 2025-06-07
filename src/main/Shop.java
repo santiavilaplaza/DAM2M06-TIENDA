@@ -20,6 +20,7 @@ import dao.Dao;
 import dao.DaoImplFile;
 import dao.DaoImplJDBC;
 import dao.DaoImplMongoDB;
+import dao.DaoImplXml;
 
 public class Shop {
 	private Amount cash = new Amount(100.00);
@@ -30,7 +31,7 @@ public class Shop {
 	private ArrayList<Sale> sales;
 	private int numberSales;
 
-	Dao dao = new DaoImplFile();
+	Dao dao = new DaoImplXml();
 
 	final static double TAX_RATE = 1.04;
 
