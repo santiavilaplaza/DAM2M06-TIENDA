@@ -32,7 +32,7 @@ public class Shop {
 	private ArrayList<Sale> sales;
 	private int numberSales;
 
-	Dao dao = new DaoImplJaxb();
+	Dao dao = new DaoImplJDBC();
 
 	final static double TAX_RATE = 1.04;
 
@@ -228,7 +228,6 @@ public class Shop {
 		// locate file, path and name
 		dao.connect();
 		this.inventory = dao.getInventory();
-		System.out.println(inventory);
 		dao.disconnect();
 	}
 
