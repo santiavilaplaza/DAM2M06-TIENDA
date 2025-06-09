@@ -1,5 +1,13 @@
 package model;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
@@ -7,16 +15,27 @@ import jakarta.xml.bind.annotation.XmlType;
 
 @XmlRootElement(name="product")
 @XmlType(propOrder= {"available","wholesalerPrice","publicPrice","stock"})
-
+@Entity
+@Table(name="inventory")
 public class Product {
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name = "id", unique = true, nullable = false)
 	private int id;
+	@Column
     private String name;
-    private Amount publicPrice;
+	@Transient
+	private Amount publicPrice;
+	@Transient
     private Amount wholesalerPrice;
+	@Column(name = "WholesalerPrice", nullable = false)
+	private double price;
+	@Column
     private boolean available;
+    @Column
     private int stock;
-    private static int totalProducts = 0;
-    
+
+	private static int totalProducts = 0;
     public final static double EXPIRATION_RATE=0.60;
 
 	public Product() {
@@ -52,7 +71,13 @@ public class Product {
 		this.name = name;
 	}
 
+	public double getPrice() {
+		return price;
+	}
 	
+	public void setPrice(double price) {
+		this.price = price;
+	}
 
 	@XmlElement(name="publicPrice")
 	public Amount getPublicPrice() {
