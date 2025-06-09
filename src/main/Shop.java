@@ -18,6 +18,7 @@ import com.mongodb.client.result.DeleteResult;
 
 import dao.Dao;
 import dao.DaoImplFile;
+import dao.DaoImplHibernate;
 import dao.DaoImplJDBC;
 import dao.DaoImplMongoDB;
 import dao.DaoImplXml;
@@ -32,7 +33,7 @@ public class Shop {
 	private ArrayList<Sale> sales;
 	private int numberSales;
 
-	Dao dao = new DaoImplJDBC();
+	Dao dao = new DaoImplHibernate();
 
 	final static double TAX_RATE = 1.04;
 
