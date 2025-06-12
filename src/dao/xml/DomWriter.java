@@ -30,6 +30,7 @@ public class DomWriter {
 
 
     public boolean generateDocument(ArrayList<Product> inventory) {
+        System.out.println(inventory);
         try {
             // Crear un nuevo documento vacio
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -46,15 +47,29 @@ public class DomWriter {
                 Element productElement = document.createElement("product");
                 productElement.setAttribute("name", product.getName());
                 root.appendChild(productElement);
+                
+                System.out.println(product.toString());
+                System.out.println("Public price: " + product.getPublicPrice());
+                System.out.println("Public price: " + product.getPublicPrice().getValue());
+
+                Element availableElement = document.createElement("available");
+                availableElement.setTextContent(Boolean.toString(product.isAvailable()));
+                productElement.appendChild(availableElement);
 
                 Element priceElement = document.createElement("wholesalerPrice");
                 priceElement.setAttribute("currency", "€");
                 priceElement.setTextContent(String.format("%.2f", product.getWholesalerPrice().getValue()));
                 productElement.appendChild(priceElement);
                 
+                Element publicPrice = document.createElement("publicPrice");
+                publicPrice.setAttribute("currency", "€");
+                publicPrice.setTextContent(String.format("%.2f", product.getPublicPrice().getValue()));
+                productElement.appendChild(publicPrice);
+                
                 Element stockElement = document.createElement("stock");
                 stockElement.setTextContent(Integer.toString(product.getStock()));
                 productElement.appendChild(stockElement);
+                
             }
 
 

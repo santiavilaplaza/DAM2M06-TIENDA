@@ -62,6 +62,7 @@ public class SaxReader extends DefaultHandler {
                     double precio = Double.parseDouble(text);
                     // si alguna vez amplías Amount para guardar currency, lo recogerás aquí
                     product.setWholesalerPrice(new Amount(precio));
+                    product.setPublicPrice(new Amount(precio*2));
                     break;
                 case "stock":
                     int stock = Integer.parseInt(text);
@@ -70,6 +71,7 @@ public class SaxReader extends DefaultHandler {
                 // otros campos si tuvieras más...
             }
         }
+
 
         if ("product".equals(qName)) {
             // cuando se cierra <product> añadimos al inventario
