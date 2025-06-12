@@ -46,6 +46,7 @@ public class DomWriter {
             for (Product product : inventory) {
                 Element productElement = document.createElement("product");
                 productElement.setAttribute("name", product.getName());
+                productElement.setAttribute("id", Integer.toString(product.getId()));
                 root.appendChild(productElement);
                 
                 System.out.println(product.toString());
