@@ -33,7 +33,7 @@ public class Shop {
 	private ArrayList<Sale> sales;
 	private int numberSales;
 
-	Dao dao = new DaoImplHibernate();
+	Dao dao = new DaoImplXml();
 
 	final static double TAX_RATE = 1.04;
 
